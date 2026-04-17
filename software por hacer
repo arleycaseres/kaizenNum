@@ -1,0 +1,33 @@
+Proyecto recomendado: Asistente de WhatsApp con IA para pequeños negocios latinoamericanos
+Por qué este y no otro
+FactorDetalleProblema realDueños de negocios (restaurantes, peluquerías, tiendas, servicios) no pueden responder WhatsApp 24/7 y pierden ventasDistribución viralCada cliente que escribe al negocio ve que hay un bot — pregunta al dueño cómo lo tiene → referido naturalSin publicidadEl bot se promociona solo en cada conversaciónMercado inmensoWhatsApp tiene 500M+ usuarios en LatAm. Es el canal de ventas #1 de la PYME colombianaSin competidor claroHay tools en inglés (ManyChat) pero nada optimizado para el español informal + LatAmPrecio menor fricción$15–25 USD/mes es asequible para un negocio pequeño que cierra 2 ventas extra por mes gracias al bot
+
+Cómo crece sin que estés empujando
+Cliente escribe al negocio → Bot responde inteligente
+     ↓
+Cliente pregunta "¿quién responde tan rápido?"
+     ↓
+Dueño del negocio explica el bot
+     ↓
+Referido orgánico → nuevo cliente tuyo
+Más el SEO pasivo: "bot whatsapp para negocios colombia" tiene búsquedas reales y poca competencia local.
+
+Stack (sin capital)
+
+WhatsApp API: Meta Cloud API (gratis hasta cierto volumen) o Twilio WhatsApp Sandbox para desarrollo
+Backend: FastAPI (ya lo conoces)
+IA: Claude API o GPT — pagas solo cuando el bot recibe mensajes
+Base de datos: Supabase free tier
+Deploy: Railway o Render (free tier)
+Pagos: Wompi (Colombia) o Stripe
+
+
+Ruta de 4 semanas
+Semana 1 — MVP funcional
+Un bot que responde preguntas frecuentes de un negocio específico (ej. restaurante). Lo configuras tú manualmente con la info del negocio.
+Semana 2 — Primer cliente de prueba (gratis)
+Un negocio local conocido. Lo instalas gratis a cambio de feedback y un testimonial.
+Semana 3 — Panel de configuración básico
+El dueño puede editar las respuestas y el horario de atención desde una interfaz simple.
+Semana 4 — Primer pago
+Cobras $15 USD/mes al negocio piloto. Contactas 5 negocios similares con el caso real.

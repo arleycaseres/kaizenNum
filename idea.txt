@@ -1,0 +1,76 @@
+Sal del modelo SaaS clásico completamente
+Antes de darte la idea, el marco mental:
+
+Los productos que más dinero generan sin publicidad son los que resuelven un miedo real, dan resultado visible en 30 segundos, y la gente los comparte porque quedar bien compartiéndolos.
+
+
+LA IDEA: Detector de Manipulación y Estafas con IA
+El problema sin resolver
+En LatAm se pierden $6+ mil millones al año en estafas digitales. Pero el problema real es más amplio — la gente no solo es estafada por criminales, sino manipulada por:
+
+Mensajes de inversión (criptos, esquemas ponzi disfrazados)
+Contratos abusivos que nadie lee
+Mensajes de WhatsApp de "familiares en peligro"
+Romances falsos (catfishing)
+Empleadores que violan derechos laborales
+Arrendadores que incluyen cláusulas ilegales
+
+Nadie tiene dónde pegar ese texto y que alguien confiable le diga: "esto es trampa, aquí está la prueba".
+
+Cómo funciona (simple)
+Usuario pega texto / sube imagen / reenvía mensaje
+              ↓
+IA analiza en 10 segundos:
+  → Patrones de manipulación psicológica
+  → Red flags legales según el país
+  → Tácticas de estafa conocidas
+  → Lenguaje coercitivo o urgencia artificial
+              ↓
+Resultado: "Esto es legítimo / Señales de alerta / Probable estafa"
++ Explicación en lenguaje simple
++ Qué hacer ahora
+
+Por qué crece solo (sin publicidad)
+La mecánica viral está dentro del problema mismo:
+Alguien detecta una estafa → lo comparte en el grupo de WhatsApp familiar con el resultado → 40 personas ven el producto funcionando → 8 lo prueban → ciclo.
+No vendes un software. Vendes la tranquilidad de no quedar como idiota.
+
+Por qué nadie lo ha hecho bien
+Lo que existeEl problemaListas negras de estafasReactivo, siempre desactualizadoArtículos de "cómo detectar estafas"Pasivo, no analiza tu caso específicoAbogados$200/hora, inaccesibleChatGPTNo está optimizado, no da veredicto claro, no conoce leyes colombianas/latam
+Tú haces algo que no existe: un veredicto claro, en español, en segundos, sobre TU situación específica.
+
+Modelo de negocio (sin publicidad)
+Freemium puro:
+
+Gratis: 3 análisis al mes
+$7/mes: ilimitado + historial + alertas proactivas
+$19/mes (empresas): API para que bancos o fintechs integren el detector
+
+El truco del crecimiento B2B: Bancos, cooperativas, y apps financieras en LatAm pagarían para integrarlo como feature de seguridad para sus usuarios. Eso te da volumen sin adquirir usuarios uno a uno.
+
+Stack (sin capital)
+
+Frontend: React (ya sabes)
+Backend: FastAPI
+IA: Claude API — es el mejor para razonamiento legal/psicológico
+Base de datos: Supabase
+Deploy: Render free tier
+Pagos: Wompi + Stripe
+
+El costo operativo por análisis es de ~$0.01 USD. Con $7/mes por usuario, el margen es brutal.
+
+Expansión natural (sin reinventar)
+Una vez que tienes usuarios, el producto evoluciona solo:
+
+Detector de noticias falsas — mismo motor, diferente input
+Analizador de contratos laborales — $39/uso, mercado enorme
+Modo relaciones — ¿Este mensaje de esta persona tiene señales de manipulación emocional? (viral en redes de mujeres jóvenes)
+API para medios de comunicación — periódicos que quieren verificar fuentes
+
+
+Semana 1 concreta
+Día 1–2: Prompt engineering — entrenar el sistema para que dé veredictos claros sobre los 10 tipos de estafa más comunes en Colombia
+Día 3–4: Interfaz simple, pega texto → resultado visual
+Día 5: Subes a producción, lo mandas a 5 grupos de WhatsApp familiares
+Día 6–7: Observas qué tipos de texto analizan, iteras
+El producto valida solo en la primera semana porque el resultado es inmediato.

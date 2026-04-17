@@ -1,0 +1,39 @@
+# Netlify Configuration for KAIZEN Protect
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+  # Set Node version
+  node_version = "20"
+
+[build.environment]
+  # Variables para el build
+  VITE_API_URL = ""  # Se configurará en Netlify dashboard
+
+# Redirects for SPA (Single Page Application)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+# Headers de seguridad
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache para assets estáticos
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache para archivos sin cache
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
