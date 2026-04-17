@@ -11,4 +11,4 @@ slowapi==0.1.9
 supabase==2.10.0
 bcrypt==4.2.1
 stripe==8.4.0
-resend>=0.2.0
+resend==2.29.0
