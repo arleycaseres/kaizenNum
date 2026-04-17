@@ -194,7 +194,7 @@ def create_user(email: str, password: str, name: str, referred_by: Optional[str]
         if any(u.email == email for u in USERS_DB.values()):
             return None
 
-user = User(
+        user = User(
             id=secrets.token_urlsafe(16),
             email=email,
             password_hash=hash_password(password),
@@ -207,8 +207,7 @@ user = User(
             referral_bonus_months=0
         )
         USERS_DB[user.id] = user
-        return user
-    return None
+    return user
 
 def get_user_by_email(email: str) -> Optional[User]:
     if USE_SUPABASE:
