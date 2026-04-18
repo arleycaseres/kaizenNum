@@ -20,7 +20,7 @@ interface HistoryPanelProps {
   token: string
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_URL = 'https://kaizennum-production.up.railway.app'
 
 export default function HistoryPanel({ token }: HistoryPanelProps) {
   const [history, setHistory] = useState<HistoryItem[]>([])

@@ -14,7 +14,7 @@ export default function AuthModal({ onLogin, onClose }: AuthProps) {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+  const API_URL = 'https://kaizennum-production.up.railway.app'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

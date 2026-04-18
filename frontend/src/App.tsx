@@ -5,7 +5,7 @@ import Dashboard from './components/Dashboard'
 import ShareResult from './components/ShareResult'
 import OnboardingModal from './components/OnboardingModal'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_URL = 'https://kaizennum-production.up.railway.app'
 
 type Seccion = 'demo' | 'pricing' | 'about'
 
@@ -62,10 +62,9 @@ const LIMITES = {
 }
 
 const STATS = [
-  { numero: '50K+', label: 'Estafas Detectadas' },
-  { numero: '98%', label: 'Precisión' },
-  { numero: '<3s', label: 'Tiempo de Respuesta' },
-  { numero: '24/7', label: 'Monitoreo' },
+  { numero: 'Gratis', label: 'para empezar' },
+  { numero: '<3s', label: 'Resultado' },
+  { nombre: 'CO', label: 'Contexto' },
 ]
 
 const FEATURES = [
@@ -75,12 +74,6 @@ const FEATURES = [
   { icon: '⚖️', title: 'Base Legal', desc: 'Referencias a leyes colombianas vigentes para dar peso legal a los reportes' },
   { icon: '🔒', title: 'Privacidad Total', desc: 'Tus datos se eliminan inmediatamente. No almacenamos mensajes.' },
   { icon: '🌎', title: 'Contexto Local', desc: 'Conocimiento de estafas específicas de Colombia y Latinoamérica' },
-]
-
-const TESTIMONIALS = [
-  { nombre: 'María González', rol: 'Abogada Consumerista', texto: 'Uso KAIZEN Protect para verificar contratos sospechosos antes de asesorar a mis clientes. Excelente herramienta.' },
-  { nombre: 'Carlos Mendoza', rol: 'Empleado Público', texto: 'Mi mamá casi cae en una estafa. Ahora verifica todo con KAIZEN Protect. Muy agradecido.' },
-  { nombre: 'Ana Rodríguez', rol: 'Gerente de Banco', texto: 'Lo recomiendo a todos mis clientes. La tasa de consultas bajó significativamente.' },
 ]
 
 function App() {
@@ -414,7 +407,7 @@ return (
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full mb-6">
               <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-              <span className="text-sm">Protegiendo a {analisisCount.toLocaleString()} personas en LatAm</span>
+              <span className="text-sm">Beta gratuita · Acceso anticipado</span>
             </div>
 
             <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
@@ -505,45 +498,28 @@ return (
                   </button>
                 </div>
 
-                {/* Drop Zone - Mobile Optimized */}
-                <div
-                  onDragEnter={handleDrag}
-                  onDragLeave={handleDrag}
-                  onDragOver={handleDrag}
-                  onDrop={handleDrop}
+                {/* File Upload Button - Small */}
+                <input ref={inputRef} type="file" accept=".txt,.md,.png,.jpg,.jpeg,.gif,.webp,.pdf" onChange={handleFileSelect} className="hidden" />
+                <button
                   onClick={() => inputRef.current?.click()}
-                  className={`
-                    border-2 border-dashed rounded-xl p-4 md:p-6 text-center cursor-pointer transition-all
-                    ${dragActive ? 'border-blue-500 bg-blue-50' : 'border-slate-300 hover:border-blue-400 hover:bg-slate-50'}
-                    ${archivoInfo ? 'border-emerald-400 bg-emerald-50' : ''}
-                  `}
+                  className="mt-2 text-sm text-slate-500 hover:text-blue-600 flex items-center gap-1"
                 >
-                  <input ref={inputRef} type="file" accept=".txt,.md,.png,.jpg,.jpeg,.gif,.webp,.pdf" onChange={handleFileSelect} className="hidden" />
+                  <span>📎</span> Subir archivo
+                </button>
 
-                  {archivoInfo ? (
-                    <div className="flex items-center justify-center gap-3">
-                      <span className="text-2xl">{archivoInfo.tipo === 'texto' ? '📄' : archivoInfo.tipo === 'imagen' ? '🖼️' : '📑'}</span>
-                      <div className="text-left">
-                        <p className="font-semibold text-slate-800 text-sm">{archivoInfo.nombre}</p>
-                        <p className="text-xs text-slate-500">{archivoInfo.tipo} • {archivoInfo.tamano}</p>
-                      </div>
-                      <button onClick={(e) => { e.stopPropagation(); limpiar(); }} className="ml-2 text-red-500 hover:text-red-700 text-xl font-bold p-2">✕</button>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-                        <span className="text-2xl md:text-3xl">📎</span>
-                      </div>
-                      <p className="font-medium text-slate-700 text-sm md:text-base">Arrastra o haz clic</p>
-                      <p className="text-xs text-slate-500 mt-1">TXT, PNG, JPG, PDF</p>
-                    </>
-                  )}
-                </div>
+                {/* Archivo adjuntado */}
+                {archivoInfo && (
+                  <div className="flex items-center justify-center gap-2 mt-2 bg-slate-100 rounded-lg px-3 py-2">
+                    <span className="text-sm">{archivoInfo.tipo === 'texto' ? '📄' : archivoInfo.tipo === 'imagen' ? '🖼️' : '📑'}</span>
+                    <span className="text-sm text-slate-700">{archivoInfo.nombre}</span>
+                    <button onClick={limpiar} className="text-red-500 hover:text-red-700 text-sm ml-1">✕</button>
+                  </div>
+                )}
 
                 {/* Preview */}
                 {previewImagen && (
-                  <div className="mt-3 md:mt-4">
-                    <img src={previewImagen} alt="Vista previa" className="max-h-32 md:max-h-40 mx-auto rounded-lg shadow-md" />
+                  <div className="mt-3">
+                    <img src={previewImagen} alt="Vista previa" className="max-h-32 mx-auto rounded-lg shadow-md" />
                   </div>
                 )}
 
@@ -717,7 +693,7 @@ return (
 
             {/* Features Sidebar - Hidden on mobile, shown on desktop */}
             <div className="hidden lg:block space-y-6">
-              <h3 className="text-2xl font-bold text-slate-900">Características Enterprise</h3>
+              <h3 className="text-2xl font-bold text-slate-900">¿Cómo funciona?</h3>
 
               <div className="grid gap-4">
                 {FEATURES.map((feature, i) => (
@@ -758,24 +734,33 @@ return (
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Ejemplos de uso */}
       <section className="bg-white py-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-slate-900 mb-12">Lo que dicen nuestros usuarios</h2>
+          <h2 className="text-3xl font-bold text-center text-slate-900 mb-4">¿Qué tipo de mensajes puedes analizar?</h2>
+          <p className="text-center text-slate-600 mb-12">Copia y pega o arrastra cualquier formato</p>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {TESTIMONIALS.map((t, i) => (
-              <div key={i} className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                <div className="flex items-center gap-1 text-yellow-400 mb-4">
-                  {'★★★★★'.split('').map((s, j) => <span key={j}>{s}</span>)}
-                </div>
-                <p className="text-slate-700 mb-4">"{t.texto}"</p>
-                <div>
-                  <p className="font-semibold text-slate-900">{t.nombre}</p>
-                  <p className="text-sm text-slate-500">{t.rol}</p>
-                </div>
-              </div>
-            ))}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-emerald-50 rounded-xl p-4 text-center border border-emerald-200">
+              <div className="text-3xl mb-2">💬</div>
+              <p className="font-semibold text-slate-900">WhatsApp</p>
+              <p className="text-xs text-slate-500">Mensajes y Notas de voz</p>
+            </div>
+            <div className="bg-blue-50 rounded-xl p-4 text-center border border-blue-200">
+              <div className="text-3xl mb-2">📧</div>
+              <p className="font-semibold text-slate-900">Email</p>
+              <p className="text-xs text-slate-500">Correos sospechosos</p>
+            </div>
+            <div className="bg-purple-50 rounded-xl p-4 text-center border border-purple-200">
+              <div className="text-3xl mb-2">📄</div>
+              <p className="font-semibold text-slate-900">Contratos</p>
+              <p className="text-xs text-slate-500">Cláusulas engañosas</p>
+            </div>
+            <div className="bg-orange-50 rounded-xl p-4 text-center border border-orange-200">
+              <div className="text-3xl mb-2">📱</div>
+              <p className="font-semibold text-slate-900">Pantallas</p>
+              <p className="text-xs text-slate-500">Capturas de estafas</p>
+            </div>
           </div>
         </div>
       </section>
@@ -942,8 +927,8 @@ return (
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold">V</span>
+                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-lg">
+                  <span className="text-white">🛡️</span>
                 </div>
                 <span className="text-white font-bold">KAIZEN Protect</span>
               </div>

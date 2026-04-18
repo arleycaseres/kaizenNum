@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_URL = 'https://kaizennum-production.up.railway.app'
 
 export default function VerifyPage() {
   const [loading, setLoading] = useState(true)
