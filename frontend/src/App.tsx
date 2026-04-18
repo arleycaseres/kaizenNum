@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import AuthModal from './components/AuthModal'
+import VerifyPage from './components/VerifyPage'
 import Dashboard from './components/Dashboard'
 import ShareResult from './components/ShareResult'
 import OnboardingModal from './components/OnboardingModal'
@@ -22,6 +23,10 @@ function scrollToSection(id: string) {
   if (element) {
     element.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
+}
+
+function isVerifyPage() {
+  return window.location.pathname === '/verify' || window.location.search.includes('verify=true')
 }
 
 interface Resultado {
@@ -106,6 +111,10 @@ function App() {
       setUser(JSON.parse(storedUser))
     }
   }, [])
+
+  if (isVerifyPage()) {
+    return <VerifyPage />
+  }
   
   const ANALISIS_LIBRES = 3
   const AD_DURATION = 15
