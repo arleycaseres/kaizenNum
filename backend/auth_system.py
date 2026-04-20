@@ -710,3 +710,83 @@ def is_first_login(user_id: str) -> bool:
     if not user:
         return False
     return not user.onboarding_completed
+
+def get_user_stats(user_id: str) -> dict:
+    history = get_history(user_id, limit=100)
+    veredictes = {}
+    for h in history:
+        v = h.get("veredicto", "UNKNOWN")
+        veredictes[v] = veredictes.get(v, 0) + 1
+    
+    total = len(history)
+    return {
+        "total_analyses": total,
+        "veredict_distribution": veredictes,
+        "subscription_tier": get_user_tier(user_id),
+    }
+
+def get_team_member_usage(owner_id: str, member_id: str) -> dict:
+    history = get_history(owner_id, limit=100)
+    member_history = [h for h in history if h.get("member_id") == member_id]
+    return {
+        "member_id": member_id,
+        "total_analysis": len(member_history),
+    }
+
+PASSWORD_RESET_TOKENS: dict[str, dict] = {}
+RESET_TOKEN_EXPIRY_HOURS = 1
+
+def request_password_reset(email: str) -> Optional[str]:
+    user = get_user_by_email(email)
+    if not user:
+        return None
+    
+    token = secrets.token_urlsafe(32)
+    expires_at = datetime.now() + timedelta(hours=RESET_TOKEN_EXPIRY_HOURS)
+    
+    PASSWORD_RESET_TOKENS[token] = {
+        "user_id": user.id,
+        "expires_at": expires_at
+    }
+    
+    return token
+
+def verify_password_reset_token(token: str) -> Optional[str]:
+    token_data = PASSWORD_RESET_TOKENS.get(token)
+    if not token_data:
+        return None
+    
+    if datetime.now() > token_data["expires_at"]:
+        del PASSWORD_RESET_TOKENS[token]
+        return None
+    
+    return token_data["user_id"]
+
+def reset_password(user_id: str, new_password: str) -> bool:
+    password_hash = hash_password(new_password)
+    
+    if USE_SUPABASE:
+        try:
+            table(TABLE_USERS).update({
+                "password_hash": password_hash,
+                "failed_login_attempts": 0,
+                "locked_until": None
+            }).eq("id", user_id).execute()
+            return True
+        except Exception as e:
+            logger.error(f"Error resetting password in Supabase: {e}")
+            return False
+    else:
+        user = USERS_DB.get(user_id)
+        if not user:
+            return False
+        user.password_hash = password_hash
+        user.failed_login_attempts = 0
+        user.locked_until = None
+        return True
+
+def cleanup_expired_reset_tokens():
+    now = datetime.now()
+    expired = [t for t, data in PASSWORD_RESET_TOKENS.items() if now > data["expires_at"]]
+    for t in expired:
+        del PASSWORD_RESET_TOKENS[t]

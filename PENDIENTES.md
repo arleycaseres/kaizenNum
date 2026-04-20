@@ -53,10 +53,13 @@
 ---
 
 #### 5. Protección CSRF (🟡 MEDIO)
-**Estado:** Pendiente
+**Estado:** Completado ✓
 **Archivos:** Frontend, `main.py`
 
-**Solución:** Implementar middleware CSRF
+**Implementado:**
+- Tokens CSRF en memoria
+- Verificación en estados mutate (frontend)
+- Same-origin policy header
 
 ---
 
@@ -187,37 +190,45 @@ TOKEN_INACTIVITY_DAYS = 90
 ## CHECKLIST
 
 ### Seguridad
-- [ ] Base de datos persistente (Supabase)
-- [ ] Rate limiting por usuario
-- [ ] Verificación de email
-- [ ] Password reset flow
-- [ ] Protección CSRF
+- [x] Base de datos persistente (Supabase) ✓
+- [x] Rate limiting por usuario ✓
+- [x] Verificación de email ✓
+- [x] Password reset flow ✓
+- [x] Protección CSRF ✓
 - [x] Sanitización básica de inputs IA ✓
-- [ ] Sanitización avanzada (prompt injection)
-- [ ] Content Security Policy
-- [ ] HSTS
-- [ ] Timeout de inactividad
+- [x] Sanitización avanzada (prompt injection) ✓
+- [x] Content Security Policy ✓
+- [x] HSTS ✓
+- [x] Timeout de inactividad ✓
 
 ### Funcionalidad
 - [ ] SSO Corporativo
-- [ ] Límites por usuario en equipo
-- [ ] Notificaciones por email
-- [ ] Dashboard de estadísticas
+- [x] Límites por usuario en equipo ✓
+- [x] Notificaciones por email ✓
+- [x] Dashboard de estadísticas ✓
 - [ ] Modo oscuro
 - [ ] Internacionalización
 
 ---
 
-## COMPLETADOS
+## COMPLETADOS (Abril 2026)
 
 ### Seguridad
 - [x] Hash de contraseñas (bcrypt)
 - [x] Protección contra fuerza bruta
 - [x] CORS configurado (whitelist)
 - [x] Rate limiting por IP
+- [x] Rate limiting híbrido (IP + user_id)
 - [x] Validación de tamaño de imágenes
 - [x] Verificación de webhook signatures
 - [x] Mensajes de error genéricos
+- [x] Sanitización básica de inputs IA
+- [x] Sanitización avanzada (prompt injection)
+- [x] Content Security Policy (CSP)
+- [x] HSTS
+- [x] Timeout de inactividad (90 días)
+- [x] Verificación de email
+- [x] Password reset flow
 
 ### Funcionalidad
 - [x] Análisis de texto
@@ -229,7 +240,16 @@ TOKEN_INACTIVITY_DAYS = 90
 - [x] Gestión de equipo (Business)
 - [x] Integración Stripe
 - [x] Autenticación completa
+- [x] Notificaciones por email
+- [x] Dashboard de estadísticas
+- [x] Límites por usuario en equipo
+
+### Pendientes restantes
+- Protección CSRF
+- SSO Corporativo
+- Modo oscuro
+- Internacionalización
 
 ---
 
-*Última actualización: 2025*
+*Última actualización: 2026-04-20*

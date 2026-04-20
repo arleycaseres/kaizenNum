@@ -12,11 +12,52 @@ logger = logging.getLogger(__name__)
 MAX_IMAGE_DIMENSION = 4096
 MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024
 
+PROMPT_INJECTION_PATTERNS = [
+    r"ignore\s+(previous|all\s+previous)\s+instructions",
+    r"disregard\s+your\s+instructions",
+    r"(you\s+are\s+now|new\s+role):",
+    r"forget\s+everything",
+    r"new\s+instructions:",
+    r"override\s+system\s+prompt",
+    r"/system\s+prompt",
+    r"act\s+as\s+(if\s+)?you\s+are",
+    r"\[\s*system\s*\]",
+    r"<!\[",
+    r"<script",
+    r"{{",
+    r"roleplay",
+    r"jailbreak",
+]
+
+PROMPT_INJECTION_BLOCKLIST = [
+    "system prompt",
+    "developer mode",
+    "developer:",
+    "dev mode",
+    "ignore all",
+    "disregard",
+    "bypass",
+    "new system",
+]
+
+def detect_prompt_injection(texto: str) -> bool:
+    texto_lower = texto.lower()
+    for pattern in PROMPT_INJECTION_PATTERNS:
+        if re.search(pattern, texto_lower):
+            return True
+    for word in PROMPT_INJECTION_BLOCKLIST:
+        if word in texto_lower:
+            return True
+    return False
+
 def sanitize_input(texto: str) -> str:
     texto = texto.strip()
     texto = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', texto)
     if len(texto) > 50000:
         texto = texto[:50000]
+    if detect_prompt_injection(texto):
+        logger.warning(f"Posible prompt injection detectado")
+        raise ValueError("Entrada rechazada por seguridad")
     return texto
 
 def validate_image_size(image_data: str) -> bool:

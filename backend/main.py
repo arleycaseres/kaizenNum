@@ -9,7 +9,9 @@ from pydantic import BaseModel, Field, field_validator
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from starlette.middleware.base import BaseHTTPMiddleware
 from typing import Optional
+import secrets
 
 from ai_analyzer import analizar, analizar_con_imagen
 from auth_system import (
@@ -36,6 +38,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 limiter = Limiter(key_func=get_remote_address)
+
+USER_RATE_LIMITS: dict[str, dict] = {}
+TOKEN_INACTIVITY_DAYS = 90
+CSRF_TOKENS: dict[str, dict] = {}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -66,6 +72,27 @@ app.add_middleware(
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],
 )
+
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    
+    origin = request.headers.get("origin")
+    if origin and origin in ALLOWED_ORIGINS:
+        response.headers["Content-Security-Policy"] = f"default-src 'self'; frame-ancestors 'none'; form-action 'self'"
+    
+    if request.url.scheme == "https":
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
+    
+    return response
+
+@app.on_event("startup")
+async def add_hsts_header():
+    pass
 
 # Models
 class AnalisisRequest(BaseModel):
@@ -247,6 +274,39 @@ async def verify_email_route(token: str):
             "redirect": "/dashboard"
         }
     raise HTTPException(status_code=400, detail="Error al verificar email")
+
+class PasswordResetRequest(BaseModel):
+    email: str = Field(..., pattern=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+
+class PasswordChangeRequest(BaseModel):
+    password: str = Field(..., min_length=6)
+
+@app.post("/api/v1/auth/password-reset")
+@limiter.limit("3/minute")
+async def request_password_reset_route(body: PasswordResetRequest):
+    from auth_system import request_password_reset
+    token = request_password_reset(body.email)
+    if token and email_is_configured():
+        from email_service import send_password_reset_email
+        send_password_reset_email(body.email, token)
+    return {"success": True, "message": "Si el email existe, recibirás un enlace para restablecer tu contraseña"}
+
+@app.post("/api/v1/auth/password-reset/confirm")
+@limiter.limit("5/minute")
+async def confirm_password_reset_route(
+    token: str,
+    body: PasswordChangeRequest
+):
+    from auth_system import verify_password_reset_token, reset_password
+    user_id = verify_password_reset_token(token)
+    if not user_id:
+        raise HTTPException(status_code=400, detail="Token inválido o expirado")
+    
+    success = reset_password(user_id, body.password)
+    if not success:
+        raise HTTPException(status_code=500, detail="Error al restablecer contraseña")
+    
+    return {"success": True, "message": "Contraseña restablecida correctamente"}
 
 class OnboardingRequest(BaseModel):
     purpose: str
@@ -526,6 +586,21 @@ async def delete_user_history(authorization: Optional[str] = Header(None)):
 
     clear_history(user["id"])
     return {"success": True, "message": "Historial eliminado"}
+
+@app.get("/api/v1/stats")
+async def get_user_stats(authorization: Optional[str] = Header(None)):
+    user = get_user_from_token(authorization)
+    if not user:
+        raise HTTPException(status_code=401, detail="Autenticación requerida")
+    
+    from auth_system import get_user_stats, get_user_tier, get_history
+    
+    tier = get_user_tier(user["id"])
+    if tier not in ["pro", "business"]:
+        raise HTTPException(status_code=403, detail="Esta función requiere plan Pro o Business")
+    
+    stats = get_user_stats(user["id"])
+    return stats
 
 @app.get("/api/v1/api-keys", response_model=list[ApiKeyResponse])
 async def list_api_keys(authorization: Optional[str] = Header(None)):
