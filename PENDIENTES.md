@@ -112,14 +112,14 @@
 ---
 
 #### 14. Modo oscuro (🟢 BAJO)
-**Estado:** ⏳ Pendiente
-**Descripción:** Theme toggle en el frontend.
+**Estado:** ✓ Completado
+**Descripción:** Theme toggle en el frontend con persistencia y detección automática.
 
 ---
 
 #### 15. Internacionalización (🟢 BAJO)
-**Estado:** ⏳ Pendiente
-**Descripción:** Soporte para español, inglés, portugués.
+**Estado:** ✓ Completado
+**Descripción:** Soporte para español, inglés, portugués con toggle en header.
 
 ---
 
@@ -142,8 +142,8 @@
 - [x] Límites por usuario en equipo ✓
 - [x] Notificaciones por email ✓
 - [x] Dashboard de estadísticas ✓
-- [ ] Modo oscuro
-- [ ] Internacionalización
+- [x] Modo oscuro ✓
+- [x] Internacionalización ✓
 
 ---
 
@@ -182,8 +182,6 @@
 
 ### Pendientes restantes
 - SSO Corporativo (integración Auth0/Okta)
-- Modo oscuro (frontend)
-- Internacionalización (i18n)
 
 ---
 

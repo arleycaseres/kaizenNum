@@ -4,6 +4,8 @@ import VerifyPage from './components/VerifyPage'
 import Dashboard from './components/Dashboard'
 import ShareResult from './components/ShareResult'
 import OnboardingModal from './components/OnboardingModal'
+import { useTheme } from './ThemeContext'
+import { Language, getTranslation, translations } from './i18n'
 
 const API_URL = 'https://kaizennum-production.up.railway.app'
 
@@ -77,6 +79,9 @@ const FEATURES = [
 ]
 
 function App() {
+  const { darkMode, toggleDarkMode } = useTheme()
+  const [idioma, setIdioma] = useState<Language>('es')
+  const t = (key: string) => getTranslation(idioma, key)
   const [texto, setTexto] = useState('')
   const [modo, setModo] = useState<'normal' | 'abuela'>('normal')
   const [loading, setLoading] = useState(false)
@@ -96,6 +101,12 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [user, setUser] = useState<User | null>(null)
+
+  const toggleIdioma = () => {
+    const idiomas: Language[] = ['es', 'en', 'pt']
+    const idx = idiomas.indexOf(idioma)
+    setIdioma(idiomas[(idx + 1) % idiomas.length])
+  }
 
   useEffect(() => {
     if (isVerifyPage()) return
@@ -346,7 +357,32 @@ return (
             )}
           </div>
 
-          {/* Right: Mobile Menu Toggle + User */}
+          {/* Language Toggle */}
+            <button
+              onClick={toggleIdioma}
+              className="hidden md:flex items-center gap-1 text-white/80 hover:text-white text-xs font-medium px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+            >
+              <span>{idioma.toUpperCase()}</span>
+            </button>
+
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={toggleDarkMode}
+              className="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
+              title={darkMode ? 'Modo claro' : 'Modo oscuro'}
+            >
+              {darkMode ? (
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                </svg>
+              )}
+            </button>
+
+            {/* Right: Mobile Menu Toggle + User */}
           <div className="flex items-center gap-2 md:gap-4">
             {/* Mobile: Hamburger */}
             <button
