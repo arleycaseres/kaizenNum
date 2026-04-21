@@ -587,7 +587,7 @@ return (
                   </div>
                 )}
 
-                {/* Floating Paste Button - Mobile */}
+                {/* Floating Paste Button - Mobile Only */}
                 <button
                   onClick={async () => {
                     try {
@@ -597,19 +597,19 @@ return (
                       console.log('Clipboard not available')
                     }
                   }}
-                  className="fixed bottom-24 md:bottom-6 right-4 md:right-6 z-40 min-h-[48px] min-w-[48px] bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 px-3 md:px-4"
+                  className="md:hidden fixed bottom-28 right-4 z-40 min-h-[48px] min-w-[48px] bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-1 px-3"
                   title="Pegar del portapapeles"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
-                  <span className="md:hidden text-sm font-medium">Pegar</span>
+                  <span className="text-sm font-medium">Pegar</span>
                 </button>
 
                 {/* Text Area - Mobile Optimized: 40vh min-height, 16px font */}
                 <textarea
-                  className="w-full min-h-[35vh] md:min-h-[8rem] p-3 md:p-4 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-slate-700 text-base md:text-base mt-3 md:mt-4"
-                  style={{ fontSize: '16px', minHeight: '35vh' }}
+                  className="w-full min-h-[40vh] md:min-h-[8rem] p-4 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-slate-700 text-base mt-3 md:mt-4"
+                  style={{ fontSize: '16px', minHeight: '40vh' }}
                   placeholder={modo === 'abuela' ? "Cuéntame el mensaje que recibiste..." : "Pega el texto sospechoso..."}
                   value={texto}
                   onChange={(e) => setTexto(e.target.value)}
