@@ -16,6 +16,14 @@ export default function AuthModal({ onLogin, onClose }: AuthProps) {
 
   const API_URL = 'https://kaizennum-production.up.railway.app'
 
+  useState(() => {
+    const params = new URLSearchParams(window.location.search)
+    const refCode = params.get('ref')
+    if (refCode) {
+      localStorage.setItem('kaizen_referral_code', refCode)
+    }
+  })
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -23,9 +31,10 @@ export default function AuthModal({ onLogin, onClose }: AuthProps) {
 
     try {
       const endpoint = mode === 'login' ? '/api/v1/auth/login' : '/api/v1/auth/register'
+      const referred_by = localStorage.getItem('kaizen_referral_code')
       const body = mode === 'login' 
         ? { email, password }
-        : { email, password, name }
+        : { email, password, name, referred_by: referred_by || undefined }
 
       const res = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
