@@ -65,8 +65,9 @@ const LIMITES = {
 
 const STATS = [
   { numero: 'Gratis', label: 'para empezar' },
-  { numero: '<3s', label: 'Resultado' },
-  { nombre: 'CO', label: 'Contexto' },
+  { numero: '<10s', label: 'Resultado' },
+  { numero: 'CO', label: 'Contexto' },
+  { numero: '0', label: 'Datos almacenados' },
 ]
 
 const FEATURES = [
@@ -770,32 +771,36 @@ return (
         </div>
       </section>
 
-      {/* Ejemplos de uso */}
+      {/* ¿Qué puedes analizar? */}
       <section className="bg-white py-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-slate-900 mb-4">¿Qué tipo de mensajes puedes analizar?</h2>
+          <h2 className="text-3xl font-bold text-center text-slate-900 mb-4">¿Qué puedes analizar?</h2>
           <p className="text-center text-slate-600 mb-12">Copia y pega o arrastra cualquier formato</p>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-emerald-50 rounded-xl p-4 text-center border border-emerald-200">
-              <div className="text-3xl mb-2">💬</div>
-              <p className="font-semibold text-slate-900">WhatsApp</p>
-              <p className="text-xs text-slate-500">Mensajes y Notas de voz</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-6 text-center border border-emerald-200 hover:shadow-xl transition-shadow cursor-pointer">
+              <div className="text-5xl mb-4">💬</div>
+              <p className="font-bold text-slate-900 text-lg">Mensajes</p>
+              <p className="font-semibold text-slate-900">de WhatsApp</p>
+              <p className="text-xs text-slate-500 mt-2">Notas de voz y textos</p>
             </div>
-            <div className="bg-blue-50 rounded-xl p-4 text-center border border-blue-200">
-              <div className="text-3xl mb-2">📧</div>
-              <p className="font-semibold text-slate-900">Email</p>
-              <p className="text-xs text-slate-500">Correos sospechosos</p>
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 text-center border border-blue-200 hover:shadow-xl transition-shadow cursor-pointer">
+              <div className="text-5xl mb-4">📧</div>
+              <p className="font-bold text-slate-900 text-lg">Emails</p>
+              <p className="font-semibold text-slate-900">sospechosos</p>
+              <p className="text-xs text-slate-500 mt-2">Phishing y estafas</p>
             </div>
-            <div className="bg-purple-50 rounded-xl p-4 text-center border border-purple-200">
-              <div className="text-3xl mb-2">📄</div>
-              <p className="font-semibold text-slate-900">Contratos</p>
-              <p className="text-xs text-slate-500">Cláusulas engañosas</p>
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 text-center border border-purple-200 hover:shadow-xl transition-shadow cursor-pointer">
+              <div className="text-5xl mb-4">📄</div>
+              <p className="font-bold text-slate-900 text-lg">Contratos</p>
+              <p className="font-semibold text-slate-900">y documentos</p>
+              <p className="text-xs text-slate-500 mt-2">Cláusulas engañosas</p>
             </div>
-            <div className="bg-orange-50 rounded-xl p-4 text-center border border-orange-200">
-              <div className="text-3xl mb-2">📱</div>
-              <p className="font-semibold text-slate-900">Pantallas</p>
-              <p className="text-xs text-slate-500">Capturas de estafas</p>
+            <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-6 text-center border border-orange-200 hover:shadow-xl transition-shadow cursor-pointer">
+              <div className="text-5xl mb-4">📸</div>
+              <p className="font-bold text-slate-900 text-lg">Capturas</p>
+              <p className="font-semibold text-slate-900">de pantalla</p>
+              <p className="text-xs text-slate-500 mt-2">Mensajes de estafas</p>
             </div>
           </div>
         </div>
