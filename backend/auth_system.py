@@ -34,6 +34,9 @@ class User(BaseModel):
     referral_code: Optional[str] = None
     referred_by: Optional[str] = None
     referral_bonus_months: int = 0
+    auth_provider: str = "email"
+    google_id: Optional[str] = None
+    picture: Optional[str] = None
 
 class Token(BaseModel):
     token: str

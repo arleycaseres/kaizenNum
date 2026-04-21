@@ -308,6 +308,42 @@ async def confirm_password_reset_route(
     
     return {"success": True, "message": "Contraseña restablecida correctamente"}
 
+@app.get("/api/v1/auth/google")
+async def google_auth():
+    from google_auth import get_google_auth_url, is_configured
+    if not is_configured():
+        raise HTTPException(status_code=503, detail="Google OAuth no configurado")
+    return {"redirect_url": get_google_auth_url()}
+
+@app.get("/api/v1/auth/google/callback")
+async def google_callback(request: Request, code: str = None, error: str = None):
+    from google_auth import process_google_user, get_tokens, get_user_info, is_configured, FRONTEND_URL
+    
+    if error:
+        raise HTTPException(status_code=400, detail="Permiso denegado por el usuario")
+    
+    if not code:
+        raise HTTPException(status_code=400, detail="Código no proporcionado")
+    
+    if not is_configured():
+        raise HTTPException(status_code=503, detail="Google OAuth no configurado")
+    
+    try:
+        tokens = get_tokens(code)
+        access_token = tokens["access_token"]
+        google_user = get_user_info(access_token)
+        token, user = process_google_user(google_user)
+        
+        redirect_to = f"{FRONTEND_URL}?google_auth=1&token={token}&user_id={user.id}&email={user.email}&name={user.name}&tier={user.subscription_tier}"
+        
+        return {"redirect": redirect_to}
+        
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error en Google callback: {e}")
+        raise HTTPException(status_code=500, detail="Error al procesar autenticación")
+
 class OnboardingRequest(BaseModel):
     purpose: str
     channel: str
