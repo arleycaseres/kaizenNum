@@ -563,22 +563,22 @@ return (
                 {/* Ejemplos de estafas - Mobile: muestra solo 1 */}
                 {!user && !resultado && (
                   <div className="mt-3 md:mt-4">
-                    <p className="text-xs text-slate-500 mb-2">Ejemplos:</p>
+                    <p className="text-xs text-slate-500 mb-2">Prueba con:</p>
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={() => setTexto("Hola, tengo una oferta de trabajo para ti. Necesitas pagar una matrícula de $200.000 para apartar el puesto. Es urgente, quedan solo 2 cupos.")}
+                        onClick={() => setTexto("Hola! Tenemos una vacante para trabajar desde casa 4 horas diarias. Pago $120.000 diarios. Solo necesitas un depósito de $50.000 para activar tu cuenta. Te interesa?")}
                         className="text-xs bg-red-100 text-red-700 px-2 py-2 rounded-lg hover:bg-red-200 transition-colors"
                       >
                         📋 Oferta
                       </button>
                       <button
-                        onClick={() => setTexto("Alerta: Tu cuenta ha sido bloqueada. Por seguridad, necesitamos que confirmes tus datos inmediatamente en el siguiente enlace: bit.ly/banco-falso")}
+                        onClick={() => setTexto("BANCOLOMBIA ALERTA: Detectamos acceso sospechoso a tu cuenta. Verifica tu identidad en los próximos 15 minutos: bancolombia-seguridad.co/verificar o tu cuenta será bloqueada.")}
                         className="text-xs bg-red-100 text-red-700 px-2 py-2 rounded-lg hover:bg-red-200 transition-colors"
                       >
                         🏦 Banco
                       </button>
                       <button
-                        onClick={() => setTexto("Hola! Ya tienes $50.000 acumulados sin hacer nada! Solo necesitas invertido $1.000.000 y en 30 días duplicas tu dinero.")}
+                        onClick={() => setTexto("Con solo $200 USD puedes obtener ganancias del 40% semanal en nuestra plataforma de trading con IA. Ya tengo 847 colombianos ganando desde casa. Te muestro los comprobantes.")}
                         className="text-xs bg-red-100 text-red-700 px-2 py-2 rounded-lg hover:bg-red-200 transition-colors"
                       >
                         💰 Invertir

@@ -448,7 +448,8 @@ async def stripe_webhook(request: Request):
     logger.info(f"Stripe webhook processed: {result}")
     return result
 
-# Analysis Routes
+DEMO_IP_LIMIT = {}
+
 @app.post("/api/v1/analizar", response_model=AnalisisResponse)
 @limiter.limit("10/minute")
 async def analizar_texto(
@@ -460,6 +461,7 @@ async def analizar_texto(
     user = get_user_from_token(authorization)
     user_id = user["id"] if user else None
     is_demo = user_id is None
+    client_ip = request.client.host
 
     if user_id:
         tier = get_user_tier(user_id)
@@ -473,15 +475,20 @@ async def analizar_texto(
                 )
             os.environ[f"user_{user_id}_used"] = str(used + 1)
     else:
-        demo_used = int(os.environ.get("demo_analisis_used", "0"))
-        if demo_used >= 1:
+        from datetime import date
+        today = date.today().isoformat()
+        if client_ip not in DEMO_IP_LIMIT:
+            DEMO_IP_LIMIT[client_ip] = {"date": today, "count": 0}
+        if DEMO_IP_LIMIT[client_ip]["date"] != today:
+            DEMO_IP_LIMIT[client_ip] = {"date": today, "count": 0}
+        if DEMO_IP_LIMIT[client_ip]["count"] >= 3:
             raise HTTPException(
-                status_code=402,
-                detail="Has usado tu análisis gratis. Crea una cuenta para continuar."
+                status_code=429,
+                detail="Has alcanzado el límite de 3 análisis gratis por día. Crea una cuenta para continuar o espera hasta mañana."
             )
-        os.environ["demo_analisis_used"] = str(demo_used + 1)
+        DEMO_IP_LIMIT[client_ip]["count"] += 1
     
-    logger.info(f"Análisis solicitado desde {request.client.host}")
+    logger.info(f"Análisis solicitado desde {client_ip}")
 
     try:
         if body.imagen_base64:
