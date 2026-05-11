@@ -2,8 +2,9 @@ import os
 import json
 import re
 import logging
+from dotenv import load_dotenv
+load_dotenv()
 from typing import Optional
-from anthropic import Anthropic
 from pydantic import BaseModel, Field
 
 logging.basicConfig(level=logging.INFO)
@@ -69,7 +70,18 @@ def validate_image_size(image_data: str) -> bool:
     except Exception:
         return False
 
-client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+AI_PROVIDER = os.getenv("AI_PROVIDER", "groq").lower()
+
+if AI_PROVIDER == "anthropic":
+    from anthropic import Anthropic
+    client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    def get_client():
+        return Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+elif AI_PROVIDER == "groq":
+    from groq import Groq
+    client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+    def get_client():
+        return Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 class Veredicto(BaseModel):
     veredicto: str = Field(..., pattern="^(SEGURO|PRECAUCION|ALERTA|PELIGRO)$")
@@ -123,21 +135,35 @@ OBJETIVO: Proteger a las personas comunes dándoles información clara y acciona
 
 def analizar(texto: str) -> dict:
     texto = sanitize_input(texto)
-    logger.info(f"Analizando texto de {len(texto)} caracteres")
+    logger.info(f"Analizando texto de {len(texto)} caracteres con provider: {AI_PROVIDER}")
 
     try:
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=1024,
-            system=SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": f"Analiza este texto y responde solo con JSON:\n{texto}"}]
-        )
-        
-        resultado = json.loads(response.content[0].text)
+        if AI_PROVIDER == "anthropic":
+            client = get_client()
+            response = client.messages.create(
+                model="claude-sonnet-4-20250514",
+                max_tokens=1024,
+                system=SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": f"Analiza este texto y responde solo con JSON:\n{texto}"}]
+            )
+            resultado = json.loads(response.content[0].text)
+        else:
+            client = get_client()
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": f"Analiza este texto y responde solo con JSON:\n{texto}"}
+                ],
+                temperature=0.3,
+                max_tokens=1024
+            )
+            resultado = json.loads(response.choices[0].message.content)
+
         veredicto = Veredicto(**resultado)
         logger.info(f"Veredicto: {veredicto.veredicto} ({veredicto.confianza}%)")
         return veredicto.model_dump()
-        
+
     except json.JSONDecodeError as e:
         logger.error(f"Error parsing JSON: {e}")
         raise ValueError("La IA no devolvió un JSON válido")
@@ -150,43 +176,65 @@ def analizar_batch(textos: list[str]) -> list[dict]:
     return [analizar(t) for t in textos]
 
 def analizar_con_imagen(texto: str, imagen_base64: str) -> dict:
-    """Analiza texto + imagen usando Claude Vision"""
+    """Analiza texto + imagen"""
     texto = sanitize_input(texto)
 
     if not validate_image_size(imagen_base64):
         raise ValueError("La imagen excede el tamaño máximo permitido (5MB)")
 
-    logger.info(f"Analizando texto + imagen")
+    logger.info(f"Analizando texto + imagen con provider: {AI_PROVIDER}")
 
     try:
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=1024,
-            system=SYSTEM_PROMPT,
-            messages=[{
-                "role": "user", 
-                "content": [
-                    {
-                        "type": "text",
-                        "text": f"Analiza este mensaje y la imagen adjunta. Responde solo con JSON:\n{texto}"
-                    },
-                    {
-                        "type": "image",
-                        "source": {
-                            "type": "base64",
-                            "media_type": "image/jpeg",
-                            "data": imagen_base64.split(',')[1] if ',' in imagen_base64 else imagen_base64
+        if AI_PROVIDER == "anthropic":
+            client = get_client()
+            response = client.messages.create(
+                model="claude-sonnet-4-20250514",
+                max_tokens=1024,
+                system=SYSTEM_PROMPT,
+                messages=[{
+                    "role": "user", 
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": f"Analiza este mensaje y la imagen adjunta. Responde solo con JSON:\n{texto}"
+                        },
+                        {
+                            "type": "image",
+                            "source": {
+                                "type": "base64",
+                                "media_type": "image/jpeg",
+                                "data": imagen_base64.split(',')[1] if ',' in imagen_base64 else imagen_base64
+                            }
                         }
-                    }
-                ]
-            }]
-        )
-        
-        resultado = json.loads(response.content[0].text)
+                    ]
+                }]
+            )
+            resultado = json.loads(response.content[0].text)
+        else:
+            from PIL import Image
+            import io
+            import base64 as b64
+            client = get_client()
+            img_data = imagen_base64.split(',')[1] if ',' in imagen_base64 else imagen_base64
+            img_bytes = b64.b64decode(img_data)
+            img = Image.open(io.BytesIO(img_bytes))
+            response = client.chat.completions.create(
+                model="llama-3.2-11b-vision-preview",
+                messages=[
+                    {"role": "user", "content": [
+                        {"type": "text", "text": f"Analiza este mensaje y la imagen adjunta. Responde solo con JSON:\n{texto}"},
+                        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_data}"}}
+                    ]}
+                ],
+                temperature=0.3,
+                max_tokens=1024
+            )
+            resultado = json.loads(response.choices[0].message.content)
+
         veredicto = Veredicto(**resultado)
         logger.info(f"Veredicto con imagen: {veredicto.veredicto} ({veredicto.confianza}%)")
         return veredicto.model_dump()
-        
+
     except json.JSONDecodeError as e:
         logger.error(f"Error parsing JSON: {e}")
         raise ValueError("La IA no devolvió un JSON válido")
