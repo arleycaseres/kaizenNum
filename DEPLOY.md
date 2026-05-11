@@ -35,11 +35,16 @@ Este documento contiene los pasos exactos para desplegar KAIZEN Protect en produ
 
 ---
 
-## Paso 2: Configurar Anthropic
+## Paso 2: Configurar Groq (Gratis) o Anthropic
 
-### 2.1 Obtener API Key
+### Opción A: Groq (RECOMENDADO - Gratis)
+1. Ir a https://console.groq.com/keys
+2. Crear API key
+3. Guardar la key
+
+### Opción B: Anthropic (De pago)
 1. Ir a https://console.anthropic.com/
-2. crear API key
+2. Crear API key
 3. Guardar la key
 
 ---
@@ -59,7 +64,11 @@ cd backend
 4. En Variables de entorno, agregar:
 
 ```env
-ANTHROPIC_API_KEY=sk-ant-api03-...
+# IA Provider: groq (gratis) o anthropic (de pago)
+AI_PROVIDER=groq
+GROQ_API_KEY=gsk_xxxxx
+# ANTHROPIC_API_KEY=sk-ant-api03-...  # Si usas anthropic
+
 SUPABASE_URL=https://xxxx.supabase.co
 SUPABASE_KEY=eyJxxx
 SUPABASE_SERVICE_KEY=eyJxxx

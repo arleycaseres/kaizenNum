@@ -14,16 +14,16 @@
 ## 2. Arquitectura del Sistema
 
 ```
-Frontend (React) ←→ Backend (FastAPI) ←→ Claude API
-                                              ↓
-                                         Supabase (pendiente)
+Frontend (React) ←→ Backend (FastAPI) ←→ Groq API (gratis) o Anthropic
+                                               ↓
+                                          Supabase
 ```
 
 ### Stack
-- **Frontend:** React 19 + TypeScript + TailwindCSS v4
+- **Frontend:** React 18 + TypeScript + TailwindCSS v3
 - **Backend:** FastAPI 0.136 + Python 3.12
-- **IA:** Claude API (Anthropic)
-- **DB:** En memoria (para desarrollo), Supabase (pendiente para producción)
+- **IA:** Groq (gratis) o Anthropic (Claude)
+- **DB:** En memoria (para desarrollo), Supabase (para producción)
 - **Payments:** Stripe (implementado, requiere configuración)
 
 ---

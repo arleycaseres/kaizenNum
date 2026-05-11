@@ -6,9 +6,14 @@ Este archivo lista todo lo que necesitas configurar para poner el proyecto en pr
 
 ## 1. CUENTAS NECESARIAS
 
-### 1.1 Anthropic (API de IA) - REQUERIDO
-- URL: https://console.anthropic.com
+### 1.1 Groq (API de IA) - RECOMENDADO (GRATIS)
+- URL: https://console.groq.com/keys
 - Crear API key y agregar en `.env`
+- Límite: 30 requests/minuto
+
+### 1.2 Anthropic (API de IA) - OPCIONAL (DE PAGO)
+- URL: https://console.anthropic.com
+- Alternativa si necesitas más capacidad
 
 ### 1.2 Supabase (Base de datos) - REQUERIDO PARA PRODUCCIÓN
 **Gratis hasta 500MB**
@@ -128,8 +133,11 @@ ALTER TABLE team_members ENABLE ROW LEVEL SECURITY;
 Edita `backend/.env`:
 
 ```env
-# === ANTHROPIC (REQUERIDO) ===
-ANTHROPIC_API_KEY=sk-ant-api03-xxx
+# === IA Provider ===
+# Opciones: "groq" (gratis, recomendado) o "anthropic" (de pago)
+AI_PROVIDER=groq
+GROQ_API_KEY=gsk_xxxxx
+# ANTHROPIC_API_KEY=sk-ant-api03-xxx  # Si usas anthropic
 
 # === SUPABASE (OBLIGATORIO EN PRODUCCIÓN) ===
 SUPABASE_URL=https://xxxxx.supabase.co

@@ -283,7 +283,7 @@ class PasswordChangeRequest(BaseModel):
 
 @app.post("/api/v1/auth/password-reset")
 @limiter.limit("3/minute")
-async def request_password_reset_route(body: PasswordResetRequest):
+async def request_password_reset_route(request: Request, body: PasswordResetRequest):
     from auth_system import request_password_reset
     token = request_password_reset(body.email)
     if token and email_is_configured():
@@ -294,6 +294,7 @@ async def request_password_reset_route(body: PasswordResetRequest):
 @app.post("/api/v1/auth/password-reset/confirm")
 @limiter.limit("5/minute")
 async def confirm_password_reset_route(
+    request: Request,
     token: str,
     body: PasswordChangeRequest
 ):

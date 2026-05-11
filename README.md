@@ -1,6 +1,6 @@
 # KAIZEN Protect - Detector de Estafas con IA
 
-Detector de manipulación y estafas digitales para Latinoamérica, potenciado por Claude AI.
+Detector de manipulación y estafas digitales para Latinoamérica, potenciado por IA (Groq gratis o Anthropic).
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.136-green.svg)
@@ -21,7 +21,7 @@ Detector de manipulación y estafas digitales para Latinoamérica, potenciado po
 
 - Python 3.11+
 - Node.js 18+
-- API Key de [Anthropic](https://console.anthropic.com)
+- API Key de [Groq](https://console.groq.com/keys) (gratis, recomendado) o [Anthropic](https://console.anthropic.com)
 
 ### Backend
 
@@ -31,8 +31,9 @@ python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# Configura tu API key
-export ANTHROPIC_API_KEY=sk-ant-xxxxx
+# Configura tu API key (Groq recomendado - gratis)
+export AI_PROVIDER=groq
+export GROQ_API_KEY=gsk_xxxxx
 
 # Corre el servidor
 uvicorn main:app --reload --port 8000
@@ -60,14 +61,13 @@ pytest tests/ -v
 |----------|--------|-------------|
 | `/api/v1/analizar` | POST | Análisis básico |
 | `/api/v1/analizar/abuela` | POST | Modo abuela |
-| `/api/v1/analizar/completo` | POST | Análisis completo (Pro) |
 | `/api/v1/status` | GET | Estado del usuario |
 | `/health` | GET | Health check |
 
 ## Estructura del Proyecto
 
 ```
-KaizenNum/
+Kaizen/
 ├── backend/
 │   ├── main.py           # FastAPI app
 │   ├── ai_analyzer.py    # Análisis IA
@@ -86,7 +86,11 @@ KaizenNum/
 ### Backend (.env)
 
 ```env
-ANTHROPIC_API_KEY=sk-ant-xxxxx
+# IA Provider: groq (gratis) o anthropic (de pago)
+AI_PROVIDER=groq
+GROQ_API_KEY=gsk_xxxxx
+# ANTHROPIC_API_KEY=sk-ant-xxxxx  # Solo si usas anthropic
+
 SUPABASE_URL=https://xxx.supabase.co
 SUPABASE_KEY=xxx
 ```
